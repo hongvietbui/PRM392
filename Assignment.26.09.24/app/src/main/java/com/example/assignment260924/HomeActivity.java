@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void bindingActions(){
-        btnClose.setOnClickListener(v -> {finish();});
+        btnClose.setOnClickListener(v -> {finishAffinity();});
     }
 
 }
