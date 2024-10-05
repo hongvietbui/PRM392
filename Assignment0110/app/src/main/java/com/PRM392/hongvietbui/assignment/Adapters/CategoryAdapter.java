@@ -16,27 +16,41 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private List<Category> categories;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Category category);
+    }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         public ImageView icon;
         public TextView text;
 
-        public CategoryViewHolder(android.view.View itemView) {
+        public CategoryViewHolder(android.view.View itemView, final OnItemClickListener listener, final List<Category> categories) {
             super(itemView);
             icon = itemView.findViewById(R.id.item_icon);
             text = itemView.findViewById(R.id.item_text);
+            itemView.setOnClickListener(view -> {
+                if(listener != null) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(categories.get(position));
+                    }
+                }
+            });
         }
     }
 
-    public CategoryAdapter(List<Category> categories) {
+    public CategoryAdapter(List<Category> categories, OnItemClickListener listener) {
         this.categories = categories;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
-        return new CategoryViewHolder(view);
+        return new CategoryViewHolder(view, listener, categories);
     }
 
     @Override
@@ -51,3 +65,4 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return categories.size();
     }
 }
+
